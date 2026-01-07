@@ -6,7 +6,7 @@ import random
 
 MAGIC_COOKIE = 0xabcddcba
 UDP_PORT = 13122
-TCP_PORT = 5000
+TCP_PORT = 0
 TEAM_NAME = "badaboom_sapir_batel"
 
 
@@ -129,11 +129,13 @@ def start_server():
         tcp.bind(('', TCP_PORT))
         tcp.listen(5)
 
+        actual_port = tcp.getsockname()[1]
+
         # Start UDP thread
         def broadcast():
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp:
                 udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-                packet = struct.pack('!IBH32s', MAGIC_COOKIE, 0x2, TCP_PORT, TEAM_NAME.encode().ljust(32, b'\x00'))
+                packet = struct.pack('!IBH32s', MAGIC_COOKIE, 0x2, actual_port, TEAM_NAME.encode().ljust(32, b'\x00'))
                 while True:
                     udp.sendto(packet, ('255.255.255.255', UDP_PORT))
                     time.sleep(1)
@@ -144,5 +146,5 @@ def start_server():
             threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     start_server()
