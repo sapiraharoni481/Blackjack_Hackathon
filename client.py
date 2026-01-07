@@ -54,7 +54,7 @@ def start_client():
                         f"\n--- TOTAL STATS: {stats['wins']} Wins, {stats['losses']} Losses, {stats['ties']} Ties ---")
                     print("\nReturning to the lobby...")
                     print("Client started, listening for offer requests...")
-            except:
+            except Exception:
                 continue
 
 
@@ -120,5 +120,5 @@ def play_game(ip, port, num_rounds):
         print(f" Error: {e}")
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     start_client()
